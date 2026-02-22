@@ -94,6 +94,34 @@ input,select,textarea{font-family:inherit;font-size:inherit}
 .tpl-modern .inv-table th{background:none;color:#7c5cfc;border-bottom:2px solid #7c5cfc;font-size:0.8rem}
 .tpl-modern .inv-table td{border-bottom:1px solid #f0f0f5}
 .tpl-modern .inv-totals .total-row{color:#7c5cfc;border-top:2px solid #7c5cfc}
+/* Pro Feature */
+.pro-section{position:relative;cursor:pointer;margin-bottom:16px}
+.pro-blur-content{filter:blur(5px);pointer-events:none;user-select:none;opacity:0.5}
+.pro-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;background:rgba(10,10,15,0.3);border-radius:var(--radius);border:2px dashed rgba(124,92,252,0.5);transition:all .3s}
+.pro-overlay:hover{background:rgba(124,92,252,0.08);border-color:var(--accent)}
+.pro-lock-icon{font-size:2.5rem;margin-bottom:8px}
+.pro-label{font-size:1rem;font-weight:700;color:var(--accent)}
+.pro-hint{font-size:0.8rem;color:var(--text2);margin-top:4px}
+.pro-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:9999}
+.pro-modal-overlay.active{display:flex}
+.pro-modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;position:relative}
+.pro-modal h2{font-size:1.4rem;margin-bottom:6px}
+.pro-modal .pm-sub{color:var(--text2);font-size:0.85rem;margin-bottom:20px}
+.pro-modal ul{list-style:none;text-align:left;margin:0 0 24px;padding:0}
+.pro-modal ul li{padding:8px 0;font-size:0.9rem;color:var(--text2);display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.pro-modal ul li:last-child{border-bottom:none}
+.pro-modal ul li span:first-child{color:var(--accent);font-size:1.1rem}
+.pro-modal .pm-cta{display:inline-block;width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:1rem;font-weight:700;border:none;border-radius:10px;cursor:pointer;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s}
+.pro-modal .pm-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,92,252,0.4)}
+.pro-modal .pm-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text2);font-size:1.2rem;cursor:pointer;padding:4px}
+.pro-modal .pm-close:hover{color:var(--text)}
+.pro-modal .pm-later{display:inline-block;margin-top:12px;background:none;border:none;color:var(--text2);font-size:0.85rem;cursor:pointer;padding:6px 12px}
+.pro-modal .pm-later:hover{color:var(--text)}
+.pro-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.pro-feat-item{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.pro-feat-item .pfi{font-size:1.3rem;margin-bottom:4px}
+.pro-feat-item .pfn{font-size:0.78rem;font-weight:600}
+.pro-feat-item .pfd{font-size:0.68rem;color:var(--text2);margin-top:2px}
 </style>
 </head>
 <body>
@@ -179,6 +207,25 @@ input,select,textarea{font-family:inherit;font-size:inherit}
       <div class="form-group"><label>Discount (%)</label><input type="number" id="discount" value="0" min="0" max="100" step="0.5" oninput="updatePreview()"></div>
     </div>
     <div class="form-group"><label>Notes</label><textarea id="invNotes" rows="3" oninput="updatePreview()" placeholder="Payment terms, bank details, etc.">Payment due within 30 days. Thank you for your business!</textarea></div>
+  </div>
+  <!-- Pro Feature Section -->
+  <div class="pro-section" onclick="showProModal()">
+    <div class="pro-overlay">
+      <div class="pro-lock-icon">🔒</div>
+      <div class="pro-label">Pro: Multi-Currency + Auto-Numbering + Client Management</div>
+      <div class="pro-hint">Click to unlock Pro features</div>
+    </div>
+    <div class="pro-blur-content">
+      <div class="card">
+        <div style="font-size:0.95rem;font-weight:600;margin-bottom:10px">⚡ Pro Features</div>
+        <div class="pro-feat-grid">
+          <div class="pro-feat-item"><div class="pfi">💱</div><div class="pfn">Multi-Currency</div><div class="pfd">Auto exchange rates</div></div>
+          <div class="pro-feat-item"><div class="pfi">🔢</div><div class="pfn">Auto-Numbering</div><div class="pfd">Sequential invoice IDs</div></div>
+          <div class="pro-feat-item"><div class="pfi">👥</div><div class="pfn">Client Manager</div><div class="pfd">Save & reuse clients</div></div>
+          <div class="pro-feat-item"><div class="pfi">📁</div><div class="pfn">Invoice History</div><div class="pfd">Track all invoices</div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <!-- Preview Panel -->
@@ -296,6 +343,27 @@ function updatePreview(){
 }
 
 window.addEventListener('DOMContentLoaded',init);
+</script>
+<div class="pro-modal-overlay" id="proModal" onclick="if(event.target===this)hideProModal()">
+<div class="pro-modal">
+<button class="pm-close" onclick="hideProModal()">&times;</button>
+<h2>🚀 Unlock Pro Invoice Generator</h2>
+<p class="pm-sub">Streamline your billing workflow</p>
+<ul>
+<li><span>✅</span> Multi-currency with live exchange rates</li>
+<li><span>✅</span> Auto-numbering & sequential invoice IDs</li>
+<li><span>✅</span> Client management — save & reuse client info</li>
+<li><span>✅</span> Invoice history & tracking dashboard</li>
+<li><span>✅</span> Recurring invoice templates</li>
+<li><span>✅</span> Payment status tracking (Paid / Pending / Overdue)</li>
+</ul>
+<a class="pm-cta" href="https://feifeicch.gumroad.com/ai-invoice-generator" target="_blank" rel="noopener">Upgrade to Pro — $14</a>
+<button class="pm-later" onclick="hideProModal()">Maybe later</button>
+</div>
+</div>
+<script>
+function showProModal(){document.getElementById('proModal').classList.add('active');}
+function hideProModal(){document.getElementById('proModal').classList.remove('active');}
 </script>
 <script src="https://cdn.jsdelivr.net/gh/nicepkg/nicepkg@main/packages/monetize/dist/monetize.js"></script>
 </body>
