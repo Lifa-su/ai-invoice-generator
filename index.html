@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 发票生成器 | AI Invoice Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="logo">📄 <span data-i18n="appName">AI 发票生成器</span></span>
+    </div>
+    <div class="topbar-right">
+      <button id="btnHistory" class="btn-icon" title="历史记录">🕐 <span data-i18n="history">历史</span></button>
+      <button id="btnSettings" class="btn-icon" title="设置">⚙️</button>
+      <button id="btnLang" class="btn-icon" title="切换语言">🌐 EN</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Left: Form -->
+    <section class="form-panel">
+      <!-- Template & Currency -->
+      <div class="form-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="template">模板</label>
+            <select id="selTemplate">
+              <option value="minimal" data-i18n="tplMinimal">简约</option>
+              <option value="professional" selected data-i18n="tplProfessional">专业</option>
+              <option value="creative" data-i18n="tplCreative">创意</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-i18n="currency">币种</label>
+            <select id="selCurrency">
+              <option value="CNY">CNY ¥</option>
+              <option value="USD">USD $</option>
+              <option value="EUR">EUR €</option>
+              <option value="GBP">GBP £</option>
+              <option value="JPY">JPY ¥</option>
+              <option value="KRW">KRW ₩</option>
+              <option value="HKD">HKD $</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- From -->
+      <div class="form-section">
+        <h3 data-i18n="from">发票方（您的信息）</h3>
+        <input type="text" id="fromName" data-i18n-ph="companyName" placeholder="公司名称">
+        <input type="text" id="fromAddress" data-i18n-ph="address" placeholder="地址">
+        <div class="form-row">
+          <input type="text" id="fromPhone" data-i18n-ph="phone" placeholder="电话">
+          <input type="email" id="fromEmail" data-i18n-ph="email" placeholder="邮箱">
+        </div>
+      </div>
+
+      <!-- To -->
+      <div class="form-section">
+        <h3 data-i18n="to">客户信息</h3>
+        <input type="text" id="toName" data-i18n-ph="clientName" placeholder="客户名称">
+        <input type="text" id="toAddress" data-i18n-ph="address" placeholder="地址">
+        <div class="form-row">
+          <input type="text" id="toPhone" data-i18n-ph="phone" placeholder="电话">
+          <input type="email" id="toEmail" data-i18n-ph="email" placeholder="邮箱">
+        </div>
+      </div>
+
+      <!-- Invoice Details -->
+      <div class="form-section">
+        <h3 data-i18n="invoiceDetails">发票详情</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="invoiceNo">发票编号</label>
+            <input type="text" id="invoiceNo" placeholder="INV-001">
+          </div>
+          <div class="form-group">
+            <label data-i18n="invoiceDate">开票日期</label>
+            <input type="date" id="invoiceDate">
+          </div>
+          <div class="form-group">
+            <label data-i18n="dueDate">到期日期</label>
+            <input type="date" id="dueDate">
+          </div>
+        </div>
+      </div>
+
+      <!-- Line Items -->
+      <div class="form-section">
+        <div class="section-header">
+          <h3 data-i18n="lineItems">项目明细</h3>
+          <button id="btnAddItem" class="btn-sm" data-i18n="addItem">+ 添加项目</button>
+        </div>
+        <div id="itemsContainer">
+          <!-- Items rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Tax & Notes -->
+      <div class="form-section">
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="taxRate">税率 (%)</label>
+            <input type="number" id="taxRate" value="0" min="0" max="100" step="0.1">
+          </div>
+          <div class="form-group">
+            <label data-i18n="discount">折扣 (%)</label>
+            <input type="number" id="discount" value="0" min="0" max="100" step="0.1">
+          </div>
+        </div>
+        <div class="form-group">
+          <label data-i18n="notes">备注</label>
+          <textarea id="notes" rows="3" data-i18n-ph="notesPlaceholder" placeholder="付款方式、备注信息等..."></textarea>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button id="btnPreview" class="btn btn-primary" data-i18n="preview">预览发票</button>
+        <button id="btnExportPDF" class="btn btn-success" data-i18n="exportPDF">导出 PDF</button>
+        <button id="btnSave" class="btn btn-secondary" data-i18n="save">保存</button>
+        <button id="btnClear" class="btn btn-ghost" data-i18n="clear">清空</button>
+      </div>
+    </section>
+
+    <!-- Right: Preview -->
+    <section class="preview-panel">
+      <div class="preview-header">
+        <h3 data-i18n="previewTitle">发票预览</h3>
+      </div>
+      <div id="invoicePreview" class="invoice-preview">
+        <div class="preview-placeholder" data-i18n="previewHint">填写左侧表单后点击"预览发票"查看效果</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- History Panel (Slide-in) -->
+  <div id="historyPanel" class="side-panel">
+    <div class="side-panel-header">
+      <h3 data-i18n="historyTitle">历史发票</h3>
+      <button id="btnCloseHistory" class="btn-icon">✕</button>
+    </div>
+    <div id="historyList" class="history-list">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+  <div id="overlay" class="overlay"></div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 data-i18n="settings">设置</h3>
+        <button id="btnCloseSettings" class="btn-icon">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>DeepSeek API Key</label>
+          <input type="password" id="apiKey" placeholder="sk-...">
+          <small data-i18n="apiKeyHint">用于AI自动补全功能，密钥仅存储在本地浏览器中</small>
+        </div>
+        <div class="form-group">
+          <label data-i18n="apiEndpoint">API 端点</label>
+          <input type="text" id="apiEndpoint" value="https://api.deepseek.com/v1/chat/completions">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnSaveSettings" class="btn btn-primary" data-i18n="saveSettings">保存设置</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Loading Indicator -->
+  <div id="aiLoading" class="ai-loading" style="display:none;">
+    <div class="ai-loading-inner">
+      <div class="spinner"></div>
+      <span data-i18n="aiThinking">AI 正在思考...</span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
