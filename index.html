@@ -9,8 +9,13 @@
 <meta property="og:title" content="Invoice Generator — Free Professional Invoices">
 <meta property="og:description" content="Create beautiful, professional invoices in seconds. Multiple templates, multi-currency, tax calculations, PDF export.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://lifa-su.github.io/ai-invoice-generator/">
+<meta property="og:image" content="https://lifa-su.github.io/ai-invoice-generator/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Invoice Generator — Free Professional Invoices">
+<meta name="twitter:description" content="Create beautiful, professional invoices in seconds. Multiple templates, multi-currency, tax calculations, PDF export.">
+<meta name="twitter:image" content="https://lifa-su.github.io/ai-invoice-generator/og-image.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -24,7 +29,7 @@
   --brand-color:#7c5cfc;
 }
 html{font-size:14px;scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
+body{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
 a{color:var(--accent2);text-decoration:none;transition:color .2s}
 a:hover{color:var(--accent)}
 input,select,textarea,button{font-family:inherit;font-size:inherit}
@@ -408,6 +413,15 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
   .preview-panel{max-height:none}
   .invoice-wrapper{width:100%;min-height:auto}
 }
+@media(max-width:768px){
+  .main-layout{grid-template-columns:1fr}
+  .control-panel{padding:16px}
+  .preview-panel{padding:20px}
+  .inv-pad{padding:28px}
+  .form-row,.form-row-3{grid-template-columns:1fr}
+  .template-grid{grid-template-columns:1fr 1fr}
+  .items-header,.item-row{grid-template-columns:2fr 60px 80px 80px 28px;gap:6px}
+}
 @media(max-width:600px){
   .app-header{padding:12px 16px}
   .control-panel{padding:14px}
@@ -498,9 +512,6 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 }
 .pro-banner-bottom h3{font-size:1rem;font-weight:700;margin-bottom:6px}
 .pro-banner-bottom p{font-size:0.82rem;color:var(--text2);margin-bottom:14px}
-</style>
-</head>
-<body>
 .inv-title{font-size:2.2rem;font-weight:800;letter-spacing:3px;text-transform:uppercase}
 .inv-meta{text-align:right;font-size:0.85rem;line-height:1.9}
 .inv-meta strong{font-weight:600;color:#555}
@@ -643,6 +654,15 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
   .preview-panel{max-height:none}
   .invoice-wrapper{width:100%;min-height:auto}
 }
+@media(max-width:768px){
+  .main-layout{grid-template-columns:1fr}
+  .control-panel{padding:16px}
+  .preview-panel{padding:20px}
+  .inv-pad{padding:28px}
+  .form-row,.form-row-3{grid-template-columns:1fr}
+  .template-grid{grid-template-columns:1fr 1fr}
+  .items-header,.item-row{grid-template-columns:2fr 60px 80px 80px 28px;gap:6px}
+}
 @media(max-width:600px){
   .app-header{padding:12px 16px}
   .control-panel{padding:14px}
@@ -676,6 +696,21 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .notification.success{border-color:var(--success);background:rgba(76,218,138,0.1)}
 .notification.error{border-color:var(--danger);background:rgba(252,92,108,0.1)}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AI Invoice Generator",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "url": "https://lifa-su.github.io/ai-invoice-generator/"
+}
+</script>
 </head>
 <body>
 
@@ -946,6 +981,10 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
     </p>
   </div>
 </div>
+
+<footer style="text-align:center;padding:24px 16px;color:var(--text2);font-size:0.8rem;border-top:1px solid var(--border);">
+  Made with ❤️ by <a href="https://ko-fi.com/feidev" target="_blank" style="color:var(--accent);">FeiDev</a>
+</footer>
 
 <script>
 // ═══════════════════════════════════════════════════════════════
@@ -1338,6 +1377,5 @@ document.addEventListener('keydown', function(e) {
 window.addEventListener('DOMContentLoaded', init);
 </script>
 
-<script src="monetize.js"></script>
 </body>
 </html>
